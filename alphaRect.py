@@ -2,6 +2,11 @@ import pygame
 import math
 import random
 
+def redraw(attenuationFactor):
+	#val = random.randrange(attenuationFactor,254)
+	val = attenuationFactor
+	return [val,val,val]
+
 def drawRectangle(screen, cStart, wid, heig, mX, mY):
 	xOffset = 200 - int(wid/2)
 	yOffset = 150 - int(heig/2)
@@ -32,7 +37,8 @@ screen = pygame.display.set_mode((400,300))
 done = False
 mX = 0
 mY = 0
-cStart = [random.randrange(1,254),random.randrange(1,254),random.randrange(1,254)]
+attenuationFactor = 100
+cStart = redraw(attenuationFactor)
 while not done:
 	events = pygame.event.get()
 	for e in events:
@@ -40,12 +46,22 @@ while not done:
 			done = True
 		if e.type == pygame.KEYDOWN:
 			if e.key == pygame.K_SPACE:
-				del cStart[:]
-				cStart = [random.randrange(1,254),random.randrange(1,254),random.randrange(1,254)]
+				cStart = redraw(attenuationFactor)
 			if e.key == pygame.K_ESCAPE:
 				done = True
+		if e.type == pygame.MOUSEBUTTONDOWN:
+			#print("UP",e)
+			if e.button == 4:
+				attenuationFactor += 1
+				if attenuationFactor > 255:
+					attenuationFactor = 255
+			else:
+				attenuationFactor -= 1
+				if attenuationFactor < 0:
+					attenuationFactor = 0
+			print("ATTEN:",attenuationFactor)
+			cStart = redraw(attenuationFactor)
 		if e.type == pygame.MOUSEMOTION:
-			#print(e.pos)
 			mX = e.pos[0]
 			mY = e.pos[1]
 		
